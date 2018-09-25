@@ -13,10 +13,7 @@ sudo make install
 cd ..
 sudo rm -rf ino
 
-## CREATE AN ARDUINO PROJECT
-mkdir arduinoTest
-cd arduinoTest
-ino init -t blink
+## Upload the project to Arduino
 ino build
 ino upload
 ino serial
@@ -27,8 +24,12 @@ ctrl A + ctrl X
 2. ino upload -m mega2560 -p /dev/ttyACM1
 3. ino serial -p /dev/ttyACM1
 
-## WAS THIS IMPORTANT TO MAKE IT WORK??
+## Enable the Serial Port on Arduino
 sudo chmod 777 /dev/ttyACM0
+if working on Windows Linux Subsystem, COM5 is mapped to ttyS5:
+sudo chmod 666 /dev/ttyS5
+
+## WAS THIS IMPORTANT TO MAKE IT WORK??
 This provides some configuration for the Arduino serial connection:
 sudo stty -F /dev/ttyACM0 cs8 9600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts
 
