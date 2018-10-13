@@ -2,12 +2,14 @@
 #include "DhtSensor.h"
 #include "DS18B20.h"
 #include "EcSensor.h"
-#include "O2Sensor.h"
+#include "CO2Sensor.h"
 #include "PhSensor.h"
 #include "Pump.h"
 #include "Relay.h"
 
-// EC and PH are on Hardware Serials 2 (pin 17,16) and 3 (pin 15,14)
+// O2 on Hardware Serial 2 (pin 19,18)
+// EC on Hardware Serial 2 (pin 17,16)
+// PH on Hardware Serial 3 (pin 15,14)
 #define motor1EnA 2
 #define pin1pump1 3 // pump pH increase
 #define pin2pump1 4 // pump pH increase
@@ -31,7 +33,7 @@ DhtSensor dhtSensor(pinDht);
 DS18B20 tempWaterSensor(pinDS18B20);
 EcSensor ecSensor;
 PhSensor phSensor;
-O2Sensor o2Sensor;
+CO2Sensor co2Sensor;
 Pump pumpPhIncr(pin1pump1, pin2pump1);
 Pump pumpPhDecr(pin1pump2, pin2pump2);
 Pump pumpEcIncr(pin1pump3, pin2pump3);
@@ -62,7 +64,7 @@ void executeCommand(char* deviceType, int deviceNr, char* command)
 				ecSensor.write(command);
 			break;
 			case 3: // O2 sensor
-				o2Sensor.write(command);
+				co2Sensor.write(command);
 			break;
 			default:
 				Serial.print("Sensor ");
@@ -170,14 +172,14 @@ void loop()
 	// read sensor values
 	ecSensor.read();
 	phSensor.read();
-	o2Sensor.read();
+	co2Sensor.read();
 	dhtSensor.check(currentTime);
 	tempWaterSensor.check(currentTime);
 
 	// if no sensor has new measurements, don't send any message
 	if (ecSensor.hasNewMeasurements() ||
 		phSensor.hasNewMeasurements() ||
-		o2Sensor.hasNewMeasurements() ||
+		co2Sensor.hasNewMeasurements() ||
 		dhtSensor.hasNewMeasurements() ||
 		tempWaterSensor.hasNewMeasurements())
 	{
@@ -242,10 +244,10 @@ void loop()
 			Serial.print(",");
 		}
 
-		if(o2Sensor.hasNewMeasurements())
+		if(co2Sensor.hasNewMeasurements())
 		{
 			Serial.print("\"O2\": ");
-			dtostrf(o2Sensor.getO2(), 8, 3, floatHelp);
+			dtostrf(co2Sensor.getCO2(), 8, 3, floatHelp);
 			Serial.print(floatHelp);
 			Serial.print(",");
 		}

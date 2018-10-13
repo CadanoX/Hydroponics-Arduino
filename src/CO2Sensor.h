@@ -1,17 +1,17 @@
-#ifndef O2SENSOR_H
-#define O2SENSOR_H
+#ifndef CO2SENSOR_H
+#define CO2ENSOR_H
 
 #include <Arduino.h>
 
-class O2Sensor  
+class CO2Sensor  
 {
 public:
-	O2Sensor()
+	CO2Sensor()
 	{
 		Serial1.begin(9600);
 	}
 
-	~O2Sensor()
+	~CO2Sensor()
 	{
 
 	}
@@ -22,7 +22,7 @@ public:
 		{
 			if (isdigit(*this->serialReadBuffer))
 			{
-				this->O2 = atof(this->serialReadBuffer);
+				this->CO2 = atof(this->serialReadBuffer);
 				this->newMeasurements = true;
 			}
 		}
@@ -39,15 +39,15 @@ public:
 		return this->newMeasurements;
 	}
 
-	float getO2()
+	float getCO2()
 	{
 		this->newMeasurements = false;
-		return this->O2;
+		return this->CO2;
 	}
 
 private:
 	bool newMeasurements = false;
-	float O2 = -1;
+	float CO2 = -1;
 	char serialReadBuffer[80];
 	int readPos = 0;
 };
