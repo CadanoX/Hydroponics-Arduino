@@ -46,7 +46,7 @@ Relay relay4(pinRelay4);
 static char serial1ReadBuffer[80];
 int serial1ReadPos = 0;
 
-int currentTime = 0;
+static unsigned long currentTime = 0;
 
 void executeCommand(char* deviceType, int deviceNr, char* command)
 {

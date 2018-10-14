@@ -24,12 +24,12 @@ public:
 		this->stop();
 	}
 
-	void start(int timeToStop = -1)                              
+	void start(unsigned long timeToStop = 0)                              
 	{
 		if (this->state == IDLE)
 		{
 			digitalWrite(this->pin, HIGH);
-			if (timeToStop == -1)
+			if (timeToStop == 0)
 				this->state = RUNNING;
 			else {
 				this->state = RUNNING_ON_TIMER;
@@ -48,7 +48,7 @@ public:
 		}
 	}
 
-	void check(int currentTime)
+	void check(unsigned long currentTime)
 	{
 		if (this->state == RUNNING_ON_TIMER)
 			if (this->timeToStop < currentTime)
@@ -63,7 +63,7 @@ private:
 	} state;
 	int pin;
 	int pin2;
-	int timeToStop = 0;
+	unsigned long timeToStop = 0;
 };
 
 #endif

@@ -28,7 +28,7 @@ public:
 		this->newMeasurements = true;
 	}
 
-	void check(int currentTime = 0)
+	void check(unsigned long currentTime = 0)
 	{
 		// if more time than interval was spent
 		if (this->nextReadTime < currentTime)
@@ -52,7 +52,7 @@ public:
 private:
 	OneWire* oneWire;
 	DallasTemperature* sensor;
-	int nextReadTime = 0;
+	unsigned long nextReadTime = 0;
 	int interval = 0;
 	float temperature = -999;
 	bool newMeasurements = false;
