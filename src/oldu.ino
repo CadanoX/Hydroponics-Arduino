@@ -3,13 +3,15 @@
 #include "DS18B20.h"
 #include "EcSensor.h"
 #include "CO2Sensor.h"
-#include "PhSensor.h"
+//#include "PhSensor.h"
+#include "DFRobot_PH.h"
 #include "Pump.h"
 #include "Relay.h"
 
 // O2 on Hardware Serial 2 (pin 19,18)
 // EC on Hardware Serial 2 (pin 17,16)
 // PH on Hardware Serial 3 (pin 15,14)
+#define pinPhSensor A2
 #define motor1EnA 2
 #define pin1pump1 3 // pump pH increase
 #define pin2pump1 4 // pump pH increase
@@ -32,7 +34,7 @@
 DhtSensor dhtSensor(pinDht);
 DS18B20 tempWaterSensor(pinDS18B20);
 EcSensor ecSensor;
-PhSensor phSensor;
+DFRobot_PH phSensor(pinPhSensor);
 CO2Sensor co2Sensor;
 Pump pumpPhIncr(pin1pump1, pin2pump1);
 Pump pumpPhDecr(pin1pump2, pin2pump2);
@@ -57,9 +59,9 @@ void executeCommand(char* deviceType, int deviceNr, char* command)
 	{
 		switch(deviceNr)
 		{
-			case 0: // pH sensor
+			/*case 0: // pH sensor
 				phSensor.write(command);
-			break;
+			break;*/
 			case 1: // EC sensor
 				ecSensor.write(command);
 			break;
@@ -171,8 +173,8 @@ void loop()
 
 	// read sensor values
 	ecSensor.read();
-	phSensor.read();
 	co2Sensor.read();
+	phSensor.check(currentTime);
 	dhtSensor.check(currentTime);
 	tempWaterSensor.check(currentTime);
 
