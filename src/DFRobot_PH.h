@@ -101,7 +101,7 @@ private:
 				sum += sampleValues[i];
 		}
 
-		return (double)sum / (PH_NUM_SAMPLES - 2)
+		return (double)sum / (PH_NUM_SAMPLES - 2);
 	}
 
 	bool newMeasurements = false;
