@@ -8,7 +8,7 @@ class EcSensor
 public:
 	EcSensor()
 	{
-		Serial2.begin(9600);
+		Serial1.begin(9600);
 	}
 
 	~EcSensor()
@@ -18,7 +18,7 @@ public:
 
 	void read()
 	{
-		if (readline(Serial2.read(), this->serialReadBuffer, 80, this->readPos) > 0)
+		if (readline(Serial1.read(), this->serialReadBuffer, 80, this->readPos) > 0)
 		{
 			if (isdigit(*this->serialReadBuffer))
 			{
@@ -40,8 +40,8 @@ public:
 	
 	void write(const char* input)
 	{
-		Serial2.print(input); //send that string to the Atlas Scientific product
-		Serial2.print('\r'); //add a <CR> to the end of the string
+		Serial1.print(input); //send that string to the Atlas Scientific product
+		Serial1.print('\r'); //add a <CR> to the end of the string
 	}
 
 	bool hasNewMeasurements()

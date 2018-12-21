@@ -12,6 +12,8 @@ cd ino
 sudo make install
 cd ..
 sudo rm -rf ino
+pip install configobj
+pip install glob2
 
 ## Upload the project to Arduino
 ino build
@@ -23,6 +25,9 @@ ctrl A + ctrl X
 1. ino build -m mega2560
 2. ino upload -m mega2560 -p /dev/ttyACM1
 3. ino serial -p /dev/ttyACM1
+
+-- with nano328
+
 
 ## Enable the Serial Port on Arduino
 sudo chmod 777 /dev/ttyACM0
