@@ -12,8 +12,7 @@ cd ino
 sudo make install
 cd ..
 sudo rm -rf ino
-pip install configobj
-pip install glob2
+pip install congifobj jinja2 glob2 serial
 
 ## Upload the project to Arduino
 ino build

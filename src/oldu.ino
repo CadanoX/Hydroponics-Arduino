@@ -1,3 +1,4 @@
+#include <SoftwareSerial.h>
 #include "functions.h"
 #include "DS18B20.h"
 #include "EcSensor.h"
@@ -7,8 +8,10 @@
 #define pinPhSensor A0
 #define pinDS18B20 41
 
+SoftwareSerial ecSerial(10, 11);
+
 DS18B20 tempWaterSensor(pinDS18B20);
-EcSensor ecSensor;
+EcSensor ecSensor(ecSerial);
 DFRobot_PH phSensor(pinPhSensor);
 
 static char serialReadBuffer[80];
@@ -40,15 +43,8 @@ void executeCommand(char* deviceType, int deviceNr, char* command)
 	}
 }
 
-void setup()
+void checkSerialInput()
 {
-	Serial.begin(9600);
-}
-
-void loop()
-{
-	currentTime = millis();
-
     if (readline(Serial.read(), serialReadBuffer, 80, serialReadPos) > 0)
 	{
 		// parse the string in the buffer to the command parts (receiver-nr command)
@@ -64,12 +60,18 @@ void loop()
 		Serial.print(" ");
 		Serial.println(command);
 	}
+}
 
-	// read sensor values
+void checkSensorInput()
+{
+	currentTime = millis();
 	ecSensor.read();
 	phSensor.check(currentTime);
 	tempWaterSensor.check(currentTime);
+}
 
+void printSensorValues()
+{
 	// if no sensor has new measurements, don't send any message
 	if (ecSensor.hasNewMeasurements() ||
 		phSensor.hasNewMeasurements() ||
@@ -128,4 +130,18 @@ void loop()
 
 		Serial.flush(); // wait until the string was sent
 	}
+}
+
+void setup()
+{
+	Serial.begin(9600);
+	ecSerial.begin(9600);
+	while (!Serial) {;} // wait for serial port to connect. Needed for native USB port only
+}
+
+void loop()
+{
+	checkSerialInput();
+	checkSensorInput();
+	printSensorValues();
 }
