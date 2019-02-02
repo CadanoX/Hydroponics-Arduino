@@ -4,6 +4,28 @@ ARDUINO over USB is at /dev/ttyACM0 or /dev/ttyACM1
 
 ---
 
+## INSTALL arduino-cli FOR COMMAND LINE ARDUINO SKETCH
+- 64bit (ubuntu bash):
+wget "https://downloads.arduino.cc/arduino-cli/arduino-cli-latest-linux64.tar.bz2"
+- ARM (rasppi):
+wget "https://downloads.arduino.cc/arduino-cli/arduino-cli-latest-linuxarm.tar.bz2"
+sudo tar -xvf arduino-cli-latest-linux64.tar.bz2
+rm arduino-cli-latest-linux64.tar.bz2
+sudo mv arduino-cli-0.3.3-alpha.preview-linux64 /usr/local/bin/arduino-cli
+arduino-cli core update-index
+arduino-cli core install arduino:avr
+
+THE SKETCH MUST LIE IN /home/pi/Arduino/olduino. THE .ino file must have the same name as the folder
+arduino-cli compile --fqbn arduino:avr:nano:cpu=atmega328 /home/pi/Arduino/olduino
+arduino-cli upload -p /dev/ttyUSB0 --fqbn arduino:avr:nano:cpu=atmega328 /home/pi/Arduino/olduino
+
+INSTALL LIBRARIES
+arduino-cli lib search onewire
+arduino-cli lib install "OneWire" "DallasTemperature"
+
+picocom -b 115200 -r -l /dev/ttyUSB0
+
+## THIS IS AN OLD REFERENCE WHICH SHOULD NOT BE USED ANYMORE
 ## INSTALL http://inotool.org/ FOR COMMAND LINE ARDUINO SKETCH
 sudo apt-get install arduino
 sudo apt-get install picocom
