@@ -6,19 +6,19 @@
 class EcSensor                                           
 {
 public:
-	EcSensor()
+	EcSensor(Stream &serial)
 	{
-		Serial2.begin(9600);
+		this->serial = &serial;
 	}
 
 	~EcSensor()
 	{
-
+		this->serial = NULL;
 	}
 
 	void read()
 	{
-		if (readline(Serial2.read(), this->serialReadBuffer, 80, this->readPos) > 0)
+		if (readline(this->serial->read(), this->serialReadBuffer, 80, this->readPos) > 0)
 		{
 			if (isdigit(*this->serialReadBuffer))
 			{
@@ -40,8 +40,8 @@ public:
 	
 	void write(const char* input)
 	{
-		Serial2.print(input); //send that string to the Atlas Scientific product
-		Serial2.print('\r'); //add a <CR> to the end of the string
+		this->serial->print(input); //send that string to the Atlas Scientific product
+		this->serial->print('\r'); //add a <CR> to the end of the string
 	}
 
 	bool hasNewMeasurements()
@@ -74,13 +74,15 @@ public:
 	}
 
 private:
+
+	Stream *serial;
+	char serialReadBuffer[80];
+	int readPos = 0;
 	bool newMeasurements = false;
 	float EC = -1;
 	float TDS = -1; 
 	float SAL = -1; 
 	float GRAV = -1;
-	char serialReadBuffer[80];
-	int readPos = 0;
 };
 
 #endif
