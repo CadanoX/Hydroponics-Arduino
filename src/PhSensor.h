@@ -3,53 +3,57 @@
 
 #include <Arduino.h>
 
-class PhSensor  
+class PhSensor
 {
 public:
-	PhSensor()
-	{
-		Serial3.begin(9600);
-	}
+  PhSensor()
+  {
+    // Initialize serial
+    Serial3.begin(9600);
+  }
 
-	~PhSensor()
-	{
+  ~PhSensor()
+  {
+  }
 
-	}
+  // Read sensor measurements
+  void read()
+  {
+    if (readline(Serial3.read(), this->serialReadBuffer, 80, this->readPos) > 0)
+    {
+      // Filter out communication errors
+      if (isdigit(*this->serialReadBuffer))
+      {
+        this->PH = atof(this->serialReadBuffer);
+        this->newMeasurements = true;
+      }
+    }
+  }
 
-	void read()
-	{
-		if (readline(Serial3.read(), this->serialReadBuffer, 80, this->readPos) > 0)
-		{
-			if (isdigit(*this->serialReadBuffer))
-			{
-				this->PH = atof(this->serialReadBuffer);
-				this->newMeasurements = true;
-			}
-		}
-	}
-	
-	void write(const char* input)
-	{
-		Serial3.print(input); //send that string to the Atlas Scientific product
-		Serial3.print('\r'); //add a <CR> to the end of the string
-	}
+  // Send command to sensor
+  void write(const char *input)
+  {
+    Serial3.print(input);
+    // Sensor requires <CR> at the end of the string
+    Serial3.print('\r');
+  }
 
-	bool hasNewMeasurements()
-	{
-		return this->newMeasurements;
-	}
+  bool hasNewMeasurements()
+  {
+    return this->newMeasurements;
+  }
 
-	float getPh()
-	{
-		this->newMeasurements = false;
-		return this->PH;
-	}
+  float getPh()
+  {
+    this->newMeasurements = false;
+    return this->PH;
+  }
 
 private:
-	bool newMeasurements = false;
-	float PH = -1;
-	char serialReadBuffer[80];
-	int readPos = 0;
+  bool newMeasurements = false;
+  float PH = -1;
+  char serialReadBuffer[80];
+  int readPos = 0;
 };
 
 #endif
