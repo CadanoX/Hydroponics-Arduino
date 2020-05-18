@@ -26,6 +26,8 @@ public:
     this->newMeasurements = true;
   }
 
+  void write(char *command) {}
+
   // Frequently check if a new measure should be taken
   void check(unsigned long currentTime = 0)
   {

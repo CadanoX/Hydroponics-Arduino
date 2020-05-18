@@ -1,9 +1,11 @@
 #include <SoftwareSerial.h>
-#include "functions.h"
-#include "DS18B20.h"
-#include "EcSensor.h"
-#include "DFRobot_PH.h"
-#include "Pump.h"
+#include "src/functions.h"
+#include "src/DhtSensor.h"
+#include "src/DS18B20.h"
+#include "src/EcSensor.h"
+#include "src/DFRobot_PH.h"
+#include "src/Pump.h"
+#include "src/Relay.h"
 
 // running multiple pumps via a motor requires control pins
 #define motor1EnA 2
@@ -12,7 +14,8 @@
 #define motor2EnB 13
 
 // Set hardware pins for connected devices
-DS18B20 tempWaterSensor(11);
+DhtSensor dhtSensor(32);
+DS18B20 tempWaterSensor(41);
 DFRobot_PH phSensor(A0);
 // EC sensor uses software serial
 SoftwareSerial ecSerial(15, 16);
@@ -166,6 +169,7 @@ void checkDevices()
   ecSensor.read();
   phSensor.check(currentTime);
   tempWaterSensor.check(currentTime);
+  dhtSensor.check(currentTime);
   pumpPhIncr.check(currentTime);
   pumpPhDecr.check(currentTime);
   pumpEcIncr.check(currentTime);
@@ -178,6 +182,7 @@ void printSensorValues()
   // If no sensor has new measurements, don't send any message
   if (ecSensor.hasNewMeasurements() ||
       phSensor.hasNewMeasurements() ||
+      dhtSensor.hasNewMeasurements() ||
       tempWaterSensor.hasNewMeasurements())
   {
     // Convert float values to string
@@ -195,6 +200,19 @@ void printSensorValues()
         Serial.print(floatHelp);
         Serial.print(",");
       }
+    }
+
+    if (dhtSensor.hasNewMeasurements())
+    {
+      Serial.print("\"Humidity\": ");
+      dtostrf(dhtSensor.getHumidty(), 8, 3, floatHelp);
+      Serial.print(floatHelp);
+      Serial.print(",");
+
+      Serial.print("\"Temp\": ");
+      dtostrf(dhtSensor.getTemperature(), 8, 3, floatHelp);
+      Serial.print(floatHelp);
+      Serial.print(",");
     }
 
     if (phSensor.hasNewMeasurements())
