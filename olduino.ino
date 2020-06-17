@@ -204,12 +204,12 @@ void printSensorValues()
 
     if (dhtSensor.hasNewMeasurements())
     {
-      Serial.print("\"Humidity\": ");
+      Serial.print("\"Humidity\":");
       dtostrf(dhtSensor.getHumidty(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
 
-      Serial.print("\"Temp\": ");
+      Serial.print("\"Temp\":");
       dtostrf(dhtSensor.getTemperature(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
@@ -217,7 +217,7 @@ void printSensorValues()
 
     if (phSensor.hasNewMeasurements())
     {
-      Serial.print("\"PH\": ");
+      Serial.print("\"PH\":");
       dtostrf(phSensor.getPh(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
@@ -225,29 +225,29 @@ void printSensorValues()
 
     if (ecSensor.hasNewMeasurements())
     {
-      Serial.print("\"EC\": ");
+      Serial.print("\"EC\":");
       dtostrf(ecSensor.getEc(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
 
-      Serial.print("\"TDS\": ");
+      Serial.print("\"TDS\":");
       dtostrf(ecSensor.getTds(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
 
-      Serial.print("\"SAL\": ");
+      Serial.print("\"SAL\":");
       dtostrf(ecSensor.getSal(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
 
-      Serial.print("\"GRAV\": ");
+      Serial.print("\"GRAV\":");
       dtostrf(ecSensor.getGrav(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
     }
 
     // Do not end JSON with a comma
-    Serial.print("\"Debug\": 0");
+    Serial.print("\"Debug\":0");
     Serial.println('}');
 
     // Wait until the string was sent
@@ -273,9 +273,7 @@ void setup()
 
   // Wait for serial port to connect. Needed for native USB port only
   while (!Serial)
-  {
-    ;
-  }
+    continue;
 }
 
 void loop()
