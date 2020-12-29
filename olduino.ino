@@ -4,6 +4,7 @@
 #include "src/DS18B20.h"
 #include "src/EcSensor.h"
 #include "src/DFRobot_PH.h"
+#include "src/DFRobot_CO2.h"
 #include "src/Pump.h"
 #include "src/Relay.h"
 
@@ -17,6 +18,7 @@
 DhtSensor dhtSensor(32);
 DS18B20 tempWaterSensor(41);
 DFRobot_PH phSensor(A0);
+DFRobot_CO2 CO2Sensor(A1);
 // EC sensor uses software serial
 SoftwareSerial ecSerial(15, 16);
 EcSensor ecSensor(ecSerial);
@@ -168,6 +170,7 @@ void checkDevices()
   currentTime = millis();
   ecSensor.read();
   phSensor.check(currentTime);
+  CO2Sensor.check(currentTime);
   tempWaterSensor.check(currentTime);
   dhtSensor.check(currentTime);
   pumpPhIncr.check(currentTime);
@@ -182,6 +185,7 @@ void printSensorValues()
   // If no sensor has new measurements, don't send any message
   if (ecSensor.hasNewMeasurements() ||
       phSensor.hasNewMeasurements() ||
+      CO2Sensor.hasNewMeasurements() ||
       dhtSensor.hasNewMeasurements() ||
       tempWaterSensor.hasNewMeasurements())
   {
@@ -219,6 +223,14 @@ void printSensorValues()
     {
       Serial.print("\"PH\":");
       dtostrf(phSensor.getPh(), 8, 3, floatHelp);
+      Serial.print(floatHelp);
+      Serial.print(",");
+    }
+
+    if (CO2Sensor.hasNewMeasurements())
+    {
+      Serial.print("\"CO2\":");
+      dtostrf(CO2Sensor.getCO2(), 8, 3, floatHelp);
       Serial.print(floatHelp);
       Serial.print(",");
     }

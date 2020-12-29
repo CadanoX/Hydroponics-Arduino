@@ -1,21 +1,21 @@
-#ifndef DFROBOT_PH_H
-#define DFROBOT_PH_H
+#ifndef DFROBOT_CO2_H
+#define DFROBOT_CO2_H
 
 // the DFRobot sensor needs to aggregate measurements to provide correct results
 #define NUM_SAMPLES 10
 #define VOLTAGE 5.0
 #define BITRANGE 1024 // arduino uses 10 bits on analogRead --> 2^10 = 1024
-#define VOLTAGE_MIN 0.0
-#define VOLTAGE_MAX 4.0
+#define VOLTAGE_MIN 0.4
+#define VOLTAGE_MAX 2.0
 #define VOLTAGE_RANGE (VOLTAGE_MAX - VOLTAGE_MIN)
-#define MAX_PH 14
+#define MAX_PPM 5000
 
 #include <Arduino.h>
 
-class DFRobot_PH
+class DFRobot_CO2
 {
 public:
-  DFRobot_PH(int pin, int interval = 1000, int samplingRate = 80)
+  DFRobot_CO2(int pin, int interval = 1000, int samplingRate = 80)
       : pin(pin),
         interval(interval),
         samplingRate(samplingRate)
@@ -23,13 +23,14 @@ public:
     this->initSampleValues();
   }
 
-  ~DFRobot_PH()
+  ~DFRobot_CO2()
   {
   }
 
   /* Measured values are between 0 and BITRANGE
    * From the value, calculate voltage between 0 and VOLTAGE
-   * From the voltage, calculate PH between 0 and 14
+   * From the voltage, calculate ppm between 0 and 5000
+   * If returned ppm is negative, the sensor is still warming up
    */
   void read()
   {
@@ -37,8 +38,8 @@ public:
     float voltage = avgSampleValues() / (BITRANGE - 1) * VOLTAGE;
     // Bring value between 0 and 1
     float norm = (voltage - VOLTAGE_MIN) / VOLTAGE_RANGE;
-    // Calculate PH
-    this->PH = norm * MAX_PH;
+    // Calculate ppm
+    this->CO2 = norm * MAX_PPM;
     this->newMeasurements = true;
   }
 
@@ -67,10 +68,10 @@ public:
     return this->newMeasurements;
   }
 
-  float getPh()
+  float getCO2()
   {
     this->newMeasurements = false;
-    return this->PH;
+    return this->CO2;
   }
 
 private:
@@ -133,7 +134,7 @@ private:
   int pin;
   int interval;
   int samplingRate;
-  float PH = -1;
+  float CO2 = -1;
   float temperature = 25;
   unsigned long nextReadTime = 0;
   unsigned long nextSampleTime = 0;
